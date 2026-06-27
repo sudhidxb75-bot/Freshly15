@@ -1,0 +1,31 @@
+Freshly V3.0 Quick Setup Checklist
+
+1. Open your Freshly backend Google Sheet.
+2. Go to Extensions > Apps Script.
+3. Delete old script content.
+4. Paste full content from: backend/Freshly_Apps_Script.gs
+5. Save.
+6. Run: setupFreshlyBackend
+7. Approve permissions.
+8. Reload Google Sheet and confirm Freshly Backend menu appears.
+9. Deploy Apps Script as Web App:
+   - Execute as: Me
+   - Access: Anyone
+10. Copy the Web App URL ending with /exec.
+11. Paste it in assets/config.js:
+   BACKEND_URL: 'https://script.google.com/macros/s/XXXX/exec',
+12. Upload all website files to GitHub.
+13. Hard refresh browser with Ctrl + F5.
+
+Private/direct links only:
+- admin.html
+- hub-partner-dashboard.html
+- delivery-partner-dashboard.html
+- district-master-dashboard.html
+
+Recommended banner values:
+- Image size: 1916 × 821 px
+- DisplayMode: ImageOnly
+- ImageFit: cover
+- BannerHeight: 320px
+- ObjectPosition: center center

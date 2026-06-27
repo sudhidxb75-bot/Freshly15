@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Freshly Backend Test</title>
+<link rel="stylesheet" href="assets/styles.css">
+<style>
+.test-shell{max-width:1000px;margin:40px auto;padding:20px}
+.test-box{background:#fff;border:1px solid #dbe4ef;border-radius:18px;padding:18px;margin:14px 0;box-shadow:0 10px 30px rgba(15,23,42,.06)}
+.status-ok{color:#15803d;font-weight:900}
+.status-bad{color:#b91c1c;font-weight:900}
+pre{white-space:pre-wrap;background:#0f172a;color:#e5e7eb;padding:16px;border-radius:14px;overflow:auto;max-height:420px}
+button{margin:6px}
+</style>
+</head>
+<body>
+<div class="test-shell">
+  <h1>Freshly Backend Connection Test</h1>
+  <p>This page checks whether your website can reach Google Apps Script backend.</p>
+
+  <div class="test-box">
+    <h2>1. Config Check</h2>
+    <p><b>Backend URL:</b> <span id="backendUrl">Checking...</span></p>
+    <p id="configStatus"></p>
+  </div>
+
+  <div class="test-box">
+    <h2>2. Live Tests</h2>
+    <button class="btn btn-primary" onclick="testPing()">Test Ping</button>
+    <button class="btn" onclick="testPublicData()">Test Public Data</button>
+    <button class="btn" onclick="testHealth()">Test Backend Health</button>
+    <button class="btn" onclick="clearLog()">Clear Log</button>
+  </div>
+
+  <div class="test-box">
+    <h2>Result</h2>
+    <div id="resultText">No test run yet.</div>
+    <pre id="resultLog"></pre>
+  </div>
+
+  <div class="test-box">
+    <h2>Common Fix</h2>
+    <ol>
+      <li>Open <code>assets/config.js</code>.</li>
+      <li>Paste your Apps Script Web App URL ending with <code>/exec</code>.</li>
+      <li>Deploy Apps Script as Web App with access: <b>Anyone</b>.</li>
+      <li>Run <code>setupFreshlyBackend</code> once inside Apps Script.</li>
+      <li>Hard refresh website with <b>Ctrl + F5</b>.</li>
+    </ol>
+  </div>
+</div>
+
+<script src="assets/config.js"></script>
+<script>
+const cfg = window.FRESHLY_CONFIG || {};
+const urlBox = document.getElementById('backendUrl');
+const statusBox = document.getElementById('configStatus');
+const resultText = document.getElementById('resultText');
+const resultLog = document.getElementById('resultLog');
+
+function showConfig(){
+  const url = cfg.BACKEND_URL || '';
+  urlBox.textContent = url || 'EMPTY';
+  if(!url){
+    statusBox.innerHTML = '<span class="status-bad">BACKEND_URL is empty. Backend cannot load.</span>';
+  }else if(!url.includes('/exec')){
+    statusBox.innerHTML = '<span class="status-bad">URL does not look like a Web App /exec URL.</span>';
+  }else{
+    statusBox.innerHTML = '<span class="status-ok">Config URL is present.</span>';
+  }
+}
+showConfig();
+
+async function callBackend(action, method='GET'){
+  if(!cfg.BACKEND_URL) throw new Error('BACKEND_URL is empty in assets/config.js');
+  let res;
+  if(method === 'GET'){
+    res = await fetch(cfg.BACKEND_URL + '?action=' + encodeURIComponent(action) + '&t=' + Date.now(), {cache:'no-store'});
+  }else{
+    res = await fetch(cfg.BACKEND_URL, {
+      method:'POST',
+      headers:{'Content-Type':'text/plain;charset=utf-8'},
+      body:JSON.stringify({action:action,data:{}})
+    });
+  }
+  const text = await res.text();
+  let json;
+  try{ json = JSON.parse(text); }catch(e){ throw new Error('Backend returned non-JSON: ' + text.slice(0,300)); }
+  return json;
+}
+
+async function run(label, action){
+  resultText.innerHTML = 'Running ' + label + '...';
+  resultLog.textContent = '';
+  try{
+    const data = await callBackend(action, 'GET');
+    resultText.innerHTML = '<span class="status-ok">' + label + ' successful.</span>';
+    resultLog.textContent = JSON.stringify(data, null, 2);
+  }catch(err){
+    resultText.innerHTML = '<span class="status-bad">' + label + ' failed: ' + err.message + '</span>';
+    resultLog.textContent = String(err.stack || err.message || err);
+  }
+}
+function testPing(){ run('Ping', 'ping'); }
+function testPublicData(){ run('Public Data', 'getPublicData'); }
+function testHealth(){ run('Backend Health', 'backendHealth'); }
+function clearLog(){ resultText.textContent='No test run yet.'; resultLog.textContent=''; }
+</script>
+</body>
+</html>

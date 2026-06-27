@@ -1,0 +1,30 @@
+V2.9.16 Backend Rollback Note
+
+This package restores the backend Apps Script logic from the last working V2.9.9 package.
+
+Why:
+- User reported backend stopped working after V2.9.9.
+- V2.9.9 Apps Script syntax was verified OK.
+- Later backend changes were removed for stability.
+
+What is retained:
+- Frontend improvements from later versions.
+- Banner frontend improvements.
+- Product catalogue fallback improvements.
+- Private dashboard pages remain separate.
+
+What is restored:
+- backend/Freshly_Apps_Script.gs is based on V2.9.9 working backend.
+- Version changed only to 2.9.16.
+
+Recommended update:
+1. Open Google Apps Script.
+2. Replace full Apps Script with backend/Freshly_Apps_Script.gs from this package.
+3. Save.
+4. Run setupFreshlyBackend once.
+5. Approve permissions if asked.
+6. Deploy as Web App again.
+7. Copy the latest /exec Web App URL.
+8. Paste it in assets/config.js.
+9. Upload frontend files to GitHub.
+10. Hard refresh website with Ctrl + F5.

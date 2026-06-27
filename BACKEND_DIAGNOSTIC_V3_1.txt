@@ -1,0 +1,33 @@
+Freshly Backend Not Loading - Diagnostic Guide V3.1
+
+1. Open backend-test.html after uploading files to GitHub.
+   Example:
+   https://yourdomain.com/backend-test.html
+
+2. If it shows BACKEND_URL is empty:
+   Open assets/config.js and paste your Apps Script Web App URL ending with /exec.
+
+3. If Ping fails:
+   Apps Script is not deployed correctly.
+   Redeploy:
+   - Deploy > New deployment
+   - Type: Web app
+   - Execute as: Me
+   - Access: Anyone
+   - Copy /exec URL
+
+4. If Ping works but Public Data fails:
+   Open Apps Script and run:
+   setupFreshlyBackend
+   Then reload Google Sheet and run:
+   Freshly Backend > Backend Health Check
+
+5. If Public Data works but website does not load:
+   Browser cache issue.
+   Hard refresh:
+   Ctrl + F5
+
+6. Do not use the /dev URL.
+   Use only the /exec URL.
+
+7. Do not leave BACKEND_URL empty.

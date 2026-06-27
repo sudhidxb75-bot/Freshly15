@@ -1,0 +1,20 @@
+Freshly V3.2 App.js Init Fix
+
+Issue fixed:
+- Console error: Uncaught ReferenceError: bindLocation is not defined at HTMLDocument.init.
+- This error stopped app.js execution, so the frontend appeared as if backend was not loading.
+
+Backend status:
+- Ping successful and Public Data successful means backend is working.
+- The problem was frontend JavaScript initialization.
+
+Fix included:
+- Added safe bindLocation wrapper.
+- Guarded init call so missing location binding cannot stop the website.
+- Backend remains the working V3.1 diagnostic/stable backend.
+
+After uploading:
+1. Replace assets/app.js with V3.2 app.js.
+2. Upload the full V3.2 package if preferred.
+3. Hard refresh with Ctrl + F5.
+4. Ignore favicon.ico 404 for now; it does not affect backend/product loading.

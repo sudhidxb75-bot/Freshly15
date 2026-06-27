@@ -1,0 +1,30 @@
+Freshly backend not loading - checklist
+
+1. Open assets/config.js and confirm BACKEND_URL is not empty.
+   It must look like:
+   BACKEND_URL: 'https://script.google.com/macros/s/AKfycb.../exec',
+
+2. In Google Apps Script:
+   - Paste Freshly_Apps_Script.gs
+   - Save
+   - Run setupFreshlyBackend once
+   - Approve permissions
+   - Reload Google Sheet
+   - Freshly Backend menu should appear
+
+3. From Google Sheet menu, run:
+   Freshly Backend -> Test Public Web API
+
+4. Deploy Apps Script:
+   Deploy -> New deployment -> Web app
+   Execute as: Me
+   Who has access: Anyone
+   Copy the Web App URL ending with /exec
+
+5. Paste the Web App URL into assets/config.js.
+
+6. Upload all files to GitHub and hard refresh:
+   Ctrl + F5
+
+V2.9.15 added public backend self-repair:
+If Countries, CountryPayments, Banners, Products, Categories or other public sheets are missing, getPublicData tries to create/repair them instead of failing.
